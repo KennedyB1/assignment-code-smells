@@ -97,31 +97,28 @@ function showProduct(product: Product, parent: HTMLElement) {
 /*
   5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
   går att göra betydligt bättre. Gör om så många som du kan hitta!
-  
+
+*/
+function createStudent(student: Student): HTMLElement {
+  const container = document.createElement("div");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = student.handedInOnTime;
+  container.appendChild(checkbox);
+  return container;
+}
+
 function presentStudents(students: Student[]) {
   for (const student of students) {
-    if (student.handedInOnTime) {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
-
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#passedstudents");
-      listOfStudents?.appendChild(container);
-    } else {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = false;
-
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#failedstudents");
-      listOfStudents?.appendChild(container);
+    const container = createStudent(student);
+    const listOfStudents = student.handedInOnTime
+      ? document.querySelector("ul#passedstudents")
+      : document.querySelector("ul#failedstudents");
+    if (listOfStudents) {
+      listOfStudents.appendChild(container);
     }
   }
 }
-*/
 /*
   6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt: Lorem, ipsum, dolor, sit, amet Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
   */
@@ -136,25 +133,32 @@ function getLoremIpsum(): string {
     Det finns dock problem med denna typ av funktion. Vad händer när kraven ändras och
     fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
     lösning som är hållbar och skalar bättre. 
+*/
 
-function createUser(
-  name: string,
-  birthday: Date,
-  email: string,
-  password: string
-) {
+
+//////
+interface User {
+  name: string;
+  birthday: Date;
+  email: string;
+  password: string;
+}
+function calculateAge(birthday: Date) {
+  const ageDiffMs = Date.now() - birthday.getTime();
+  const ageDate = new Date(ageDiffMs);
+  const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  return age;
+}
+
+function createUser(user: User) {
   // Validation
-
-  let ageDiff = Date.now() - birthday.getTime();
-  let ageDate = new Date(ageDiff);
-  let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-  console.log(userAge);
-
-  if (!(userAge < 20)) {
-    // Logik för att skapa en användare
+  const age = calculateAge(user.birthday);
+  const minimumUserAge = 20;
+  if (age >= minimumUserAge) {
+    // Logik
   } else {
     return "Du är under 20 år";
   }
 }
-*/
+
+
